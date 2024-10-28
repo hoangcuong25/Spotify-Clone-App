@@ -20,7 +20,19 @@ const ListSong = () => {
         }
     }
 
-    
+    const removeSong = async (id) => {
+        try {
+            const response = await axios.post(`${url}/api/song/remove`, { id })
+
+            if (response.data && response.data.success) {
+                toast.success(response.data.message)
+                await fetchSongs()
+            }
+
+        } catch {
+            toast.error("Error occured")
+        }
+    }
 
     useEffect(() => {
         fetchSongs()
@@ -45,12 +57,12 @@ const ListSong = () => {
                             <p>{item.name}</p>
                             <p>{item.album}</p>
                             <p>{item.duration}</p>
-                            <p>X</p>
+                            <p onClick={() => removeSong(item._id)} className='cursor-pointer'>X</p>
                         </div>
                     )
                 })}
             </div>
-        </div>
+        </div >
     )
 }
 

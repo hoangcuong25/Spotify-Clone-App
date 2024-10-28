@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable react/jsx-key */
+import React, { useEffect, useState } from 'react'
 import { assets } from '../assets/admin-assets/assets'
 import axios from "axios"
 import { url } from '../App'
@@ -41,11 +42,31 @@ const AddSong = () => {
             }
 
         } catch {
-            toast.error("Error occured")
+            toast.error("Error occured 2")
         }
 
         setLoading(false)
     }
+
+    const loadAlbumData = async () => {
+        try {
+            const response = await axios.get(`${url}/api/album/listAlbum`)
+
+            if (response.data && response.data.success) {
+                setAlbumData(response.data.albums)
+            } else {
+                toast.error("Unable to load albums data")
+            }
+
+
+        } catch {
+            toast.error("Error occured 1")
+        }
+    }
+
+    useEffect(() => {
+        loadAlbumData()
+    }, [])
 
     return loading ?
         (<div className='grid place-items-center min-h-[80vh]'>
@@ -104,6 +125,7 @@ const AddSong = () => {
                         defaultValue={album}
                     >
                         <option value="none">None</option>
+                        {albumData.map((item, index) => (<option key={index} value={item.name}>{item.name}</option>))}
                     </select>
                 </div>
 
